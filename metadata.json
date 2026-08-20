@@ -1,0 +1,6 @@
+{
+  "name": "GMP智能体工作台",
+  "description": "一个全功能、互动式的GxP智能体实操与配置工作台，支持提示词优化、知识库检索、Skill组装及专家团多智能体协作模拟。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
