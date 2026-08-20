@@ -158,10 +158,53 @@ npm run start
 
 ## ☁️ 部署上线指南
 
-### 1. 部署到 Cloud Run (推荐，一键部署)
+### 1. 部署到 Cloudflare Pages (零成本、超高性能 Serverless 边缘运行) ★★★★★ 强力推荐！
+本项目已完美集成了 **Cloudflare Pages + Pages Functions** 架构。这意味着您无需准备和维护任何传统 Express 容器服务器，即可直接将本项目以**全栈 Serverless** 形式完全托管在 Cloudflare 全球边缘网络中，速度极快，且额度完全免费！
+
+#### ⚙️ Cloudflare 部署步骤：
+1. **关联 GitHub 仓库**：登录 Cloudflare Dashboard，选择 **Workers & Pages** -> **Pages** -> **Connect to Git**。
+2. **选择构建配置**：
+   * **Framework preset (框架预设)**: `Vite` 或 `None`
+   * **Build command (构建命令)**: `npm run build`
+   * **Build output directory (输出目录)**: `dist`
+3. **配置环境变量 (核心 API 配置)**：
+   在 Pages 创建完成后，进入 **Settings** -> **Environment variables** (环境变量)，在 **Production** 和 **Preview** 中添加您所需的真实 API Key 即可：
+   * `GEMINI_API_KEY`: 您的谷歌 Gemini 密钥 (如方案 A)
+   * `OPENAI_API_KEY`: 您的兼容 OpenAI / DeepSeek 密钥 (如方案 B)
+   * `OPENAI_BASE_URL`: 第三方中转地址，例如 `https://api.deepseek.com/v1`
+   * `OPENAI_MODEL_NAME`: 大模型名称，例如 `deepseek-chat`
+4. **一键构建**：点击 **Save and Deploy**。
+
+*💡 为什么这能完美工作？*
+*我们特别在 `/functions/api/gemini/run.ts` 下创建了原生的 **Cloudflare Workers Edge Adaptor**。当您的 Vite 前端部署到 CF Pages 时，Cloudflare 会全自动识别该目录，将 API 请求网关挂载在边缘 Serverless V8 虚拟机中运行，实现零冷启动的高效安全代发！*
+
+### 2. 部署到 Vercel (零配置、一键极速 Serverless 部署) ★★★★★ 强力推荐！
+本项目同样完美集成了 **Vercel Serverless Functions** 架构。Vercel 能够极其敏捷地自动侦测项目并将其托管在全球高性能无服务器（Serverless）网络中，支持高并发并提供极速冷启动。
+
+#### ⚙️ Vercel 部署步骤：
+1. **一键导入**：登录 Vercel 仪表盘，点击 **Add New** -> **Project**，导入您的 GitHub 仓库。
+2. **选择构建配置**：
+   Vercel 会自动侦测到 Vite。
+   * **Framework Preset (框架预设)**: `Vite`
+   * **Build Command (构建命令)**: `npm run build`
+   * **Output Directory (输出目录)**: `dist`
+3. **配置环境变量 (Environment Variables)**：
+   在 Vercel 项目设置页面的 **Environment Variables** 部分添加所需的 API 密钥：
+   * `GEMINI_API_KEY`: 您的谷歌 Gemini 密钥 (方案 A)
+   * `OPENAI_API_KEY`: 您的兼容 OpenAI / DeepSeek 密钥 (方案 B)
+   * `OPENAI_BASE_URL`: 第三方中转地址，例如 `https://api.deepseek.com/v1`
+   * `OPENAI_MODEL_NAME`: 大模型名称，例如 `deepseek-chat`
+4. **点击 Deploy**：完成构建。
+
+*💡 为什么这能完美工作？*
+*我们特别在 `/api/gemini/run.ts` 目录下为 Vercel 编写了原生的 **Node.js Serverless Function Handler**，并配以 `vercel.json` 规则重写，这使得 Vercel 部署能够在后端无缝执行 API 转发，完全隐藏真实 API 密钥，保障药厂核心数据绝对安全！*
+
+---
+
+### 3. 部署到 Cloud Run (一键部署)
 如果您使用的是 Google AI Studio 平台，直接点击右上角的 **Share** 或 **Deploy to Cloud Run**，系统会自动读取项目的 `package.json` 中的 `build` 与 `start` 指令，实现全自动的、无服务器（Serverless）云端弹性部署。
 
-### 2. 使用 Docker 部署 (私有化部署)
+### 3. 使用 Docker 部署 (私有化部署)
 由于本项目自带轻量高效的 Node 服务端 (`server.ts`)，因此可以极简 Docker 化。只需在根目录下创建 `Dockerfile`：
 ```dockerfile
 FROM node:20-alpine

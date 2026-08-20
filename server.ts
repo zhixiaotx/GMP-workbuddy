@@ -70,12 +70,12 @@ app.post('/api/gemini/run', async (req, res) => {
       // Handle exercise 2 (CRAFT) double side-by-side prompt comparison
       if (exerciseId === 'ex-2') {
         const badRes = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: badPrompt || '帮我评估这份偏差报告。'
         });
         
         const craftRes = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: craftPrompt,
           config: {
             systemInstruction: '你是一名专业的GMP审计和合规专家。请根据输入的CRAFT五维结构化要求进行答复，语言需极其严谨学术、逻辑闭环且格式分明。'
@@ -103,7 +103,7 @@ ${prompt}
 ]`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: promptText
         });
 
@@ -125,7 +125,7 @@ ${prompt}
       // Handle deviation expert QA specialist
       if (exerciseId === 'ex-12-qa') {
         const response = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: prompt,
           config: {
             systemInstruction: '你是一名制药行业QA偏差调查与风险评估专家。你的职责是根据输入的原始偏差事件：1. 进行全面的风险程度划定（微小偏差 Minor / 主要偏差 Major / 严重偏差 Critical）并给出充分理据；2. 深度评估其对关键质量属性(CQA)、关键工艺参数(CPP)及患者安全的可能潜在危害；3. 给出至少3个具体的现场临时纠正与隔离措施。请用严谨、专业的cGMP学术语调输出。'
@@ -137,7 +137,7 @@ ${prompt}
       // Handle deviation expert Regulatory specialist
       if (exerciseId === 'ex-12-reg') {
         const response = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: prompt,
           config: {
             systemInstruction: '你是一名熟稔全球制药法规与cGMP标准的合规检察专家。你的职责是根据偏差背景和QA专家做出的风险评估：1. 检索并精准映射相对应的国内外主要法规条款依据（如FDA 21 CFR Part 211, 欧盟GMP附录 Annex 1, 中国2010版GMP无菌/无菌原料药附录等）；2. 进行合规差距比对，指出该缺陷的具体法规危害与严重性偏离度。请用权威、严谨的法条审查风格输出。'
@@ -149,7 +149,7 @@ ${prompt}
       // Handle deviation expert Technical Writer
       if (exerciseId === 'ex-12-doc') {
         const response = await ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-2.5-flash',
           contents: prompt,
           config: {
             systemInstruction: '你是一名制药质量保证部的技术撰稿及技术写作（Technical Writing）专家。你的职责是汇总原始偏差信息、QA专家评估意见以及合规法规对照分析，编写出一篇极其标准、逻辑高度严密、可供中欧美监管局审核的正式书面【初始偏差调查与CAPA纠正预防计划报告】。你的输出格式必须使用清晰专业的Markdown标题（包括：基本信息、QA评估、法规差距、根本原因调查路径、和人/机/料/法/环CAPA方案）。语调需务实、严谨、绝无废话。'
@@ -172,7 +172,7 @@ ${prompt}
       }
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-2.5-flash',
         contents: finalPrompt,
         config
       });
